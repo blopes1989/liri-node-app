@@ -2,7 +2,7 @@ require("dotenv").config();
 var Twitter =require("twitter")
 var Spotify = require("node-spotify-api")
 var Request = require("request")
-var FS = require("fs")
+var fs = require("fs")
 
 //var spotify = new Spotify(keys.spotify);
 
@@ -21,7 +21,7 @@ switch(decision){
 
     break;
     case `do-what-it-says`:
-
+    dowhatitsays()
     break;
     default:
     console.log("this is not a valid command")
@@ -83,3 +83,82 @@ spotify.search({ type: 'track', query: song }, function(err, data) {
 });
     }
 
+    function moviesearch (){
+
+
+    }
+
+ function dowhatitsays () {
+  fs.readFile("random.txt", "utf8", function(error, data) {
+    
+
+    if (error) {
+      return console.log(error);
+    }
+
+    console.log(data);
+    
+  // Then split it by commas (to make it more readable)
+  var dataArr = data.split(",");
+
+  // We will then re-display the content as an array for later use.
+  console.log(dataArr[0]);
+ 
+  var command = dataArr[0]
+  switch(command){
+    case "my-tweets":
+    tweets()
+    break;
+    case `spotify-this-song`:
+    whatspot()
+    break;
+    case `movie-this`:
+
+    break;
+    case `do-what-it-says`:
+    dowhatitsays()
+    break;
+    default:
+    console.log("this is not a valid command")
+
+
+
+    
+}
+function whatspot (){
+        
+ 
+  var spotify = new Spotify({
+    id: keys.spotify.id,
+    secret: keys.spotify.secret
+  });
+  
+   var song = dataArr[1]
+  spotify.search({ type: 'track', query: song }, function(err, data) {
+    if (err) {
+      return console.log('Error occurred: ' + err);
+    }
+   
+    var artistNames =[];
+    var artistsArr = data.tracks.items[0].artists;
+  
+    console.log("Song Name: " + data.tracks.items[0].name); 
+    console.log("-----------------------------------------------");
+    //console.log(data.tracks.items[0])
+    for (i = 0; i < artistsArr.length; i++){
+    artistNames.push(" "+artistsArr[i].name)
+    }
+    console.log("Artists: " + artistNames); 
+    console.log("-----------------------------------------------");
+    console.log("Album: "+data.tracks.items[0].album.name); 
+    console.log("-----------------------------------------------");
+    console.log("Track Link: "+data.tracks.items[0].external_urls.spotify); 
+    console.log("-----------------------------------------------"); 
+  });
+}
+
+});
+
+
+
+ }
